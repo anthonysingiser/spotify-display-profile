@@ -1,7 +1,8 @@
-import { redirectToAuthCodeFlow } from "./authCodeFlowPKCE";
+import { redirectToAuthCodeFlow, getAccessToken } from "./authCodeFlowPKCE";
 
 const clientId = "2cc0776ce6a941cd97ec49ff53395e10";
-const code = undefined;
+const params = new URLSearchParams(window.location.search);
+const code = params.get("code");
 
 if (!code) {
     redirectToAuthCodeFlow(clientId);
@@ -9,10 +10,6 @@ if (!code) {
     const accessToken = await getAccessToken(clientId, code);
     const profile = await fetchProfile(accessToken);
     populateUI(profile);
-}
-
-async function getAccessToken(clientId, code) {
-  // TODO: Get access token for code
 }
 
 async function fetchProfile(token) {
