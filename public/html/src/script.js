@@ -13,7 +13,10 @@ if (!code) {
 }
 
 async function fetchProfile(token) {
-    // TODO: Call Web API
+    const result = await fetch("https://api.spotify.com/v1/me", {
+        method: "GET", headers: { Authorization: `Bearer ${token}` }
+    });
+    return await result.json();
 }
 
 function populateUI(profile) {
