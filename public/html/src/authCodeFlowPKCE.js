@@ -4,7 +4,7 @@ export async function redirectToAuthCodeFlow(clientId) {
 
     const state = generateCodeVerifier(16);
 
-    localStorage.setItem("verifier", verifier);
+    sessionStorage.setItem("verifier", verifier);
 
     const params = new URLSearchParams({
         response_type: 'code',
@@ -16,7 +16,7 @@ export async function redirectToAuthCodeFlow(clientId) {
         code_challenge: challenge
     });
 
-    window.location = `https://accounts.spotify.com/authorize?${params}`;
+    window.location.href = `https://accounts.spotify.com/authorize?${params}`;
 }
 
 export async function getAccessToken(clientId, code){
@@ -29,14 +29,21 @@ export async function getAccessToken(clientId, code){
     params.append("redirect_uri", "http://localhost:3000/callback");
     params.append("code_verifier", verifier);
 
-    const result = await fetch("https://accounts.spotify.com/api/token", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: params
-    });
+    try {
+        const result = await fetch("https://accounts.spotify.com/api/token", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: params
+        });
 
-    const { access_token } = await result.json();
-    return access_token;
+        const { access_token } = await result.json();
+
+        return access_token;
+
+    } catch (error) {
+        console.error(error);
+        window.location.href = "/"
+    }
 }
 
 function generateCodeVerifier(length) {
@@ -62,3 +69,4 @@ async function generateCodeChallenge(codeVerifier) {
     
     return base64encode(digest);
 }
+
