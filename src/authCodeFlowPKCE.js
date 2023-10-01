@@ -19,7 +19,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     window.location.href = `https://accounts.spotify.com/authorize?${params}`;
 }
 
-export async function getAccessToken(clientId, code){
+export async function getAccessToken(clientId, code) {
     const verifier = localStorage.getItem("verifier");
 
     const params = new URLSearchParams();
@@ -59,14 +59,34 @@ function generateCodeVerifier(length) {
 async function generateCodeChallenge(codeVerifier) {
     function base64encode(string) {
         return btoa(String.fromCharCode.apply(null, new Uint8Array(string)))
-          .replace(/\+/g, '-')
-          .replace(/\//g, '_')
-          .replace(/=+$/, '');
-      }
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
+    }
     const encoder = new TextEncoder();
     const data = encoder.encode(codeVerifier);
     const digest = await window.crypto.subtle.digest('SHA-256', data);
-    
+
     return base64encode(digest);
 }
 
+export const refreshSpotifyToken = async (refresh_token) => {
+    const body = new URLSearchParams({
+        grant_type: "refresh_token" || "",
+        refresh_token: refresh_token,
+        client_id: SPOTIFY_CLIENT_ID || "",
+    });
+    try {
+        const response = await fetch("https://accounts.spotify.com/api/token", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: body,
+        });
+
+        return response.json();
+    } catch (err) {
+        console.log(err);
+    }
+};
