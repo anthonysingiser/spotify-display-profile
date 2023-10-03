@@ -1,9 +1,14 @@
+import Script from 'next/script'
+
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
         <head>
             <title>My Spotify Profile</title>
-            <script src="../script.js" async></script>
+            <Script 
+                src="http://localhost:3000/src/script.js"
+                strategy="onLoad"
+            />
         </head>
         <body>
             <h1>Display your Spotify profile data</h1>
