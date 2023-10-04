@@ -1,4 +1,41 @@
-export async function redirectToAuthCodeFlow(clientId) {
+const clientId = "2cc0776ce6a941cd97ec49ff53395e10";
+const params = new URLSearchParams(window.location.search);
+const code = params.get("code");
+
+if (!code) {
+    console.log('hello from script.js')
+    redirectToAuthCodeFlow(clientId);
+} else {
+    console.log('hello from else script.js')
+    const accessToken = await getAccessToken(clientId, code);
+    const profile = await fetchProfile(accessToken);
+    populateUI(profile);
+}
+
+async function fetchProfile(token) {
+    const result = await fetch("https://api.spotify.com/v1/me", {
+        method: "GET", headers: { Authorization: `Bearer ${token}` }
+    });
+    return await result.json();
+}
+
+function populateUI(profile) {
+    document.getElementById("displayName").innerText = profile.display_name;
+    if (profile.images[0]) {
+        const profileImage = new Image(200, 200);
+        profileImage.src = profile.images[0].url;
+        document.getElementById("avatar").appendChild(profileImage);
+        document.getElementById("imgUrl").innerText = profile.images[0].url;
+    }
+    document.getElementById("id").innerText = profile.id;
+    document.getElementById("email").innerText = profile.email;
+    document.getElementById("uri").innerText = profile.uri;
+    document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
+    document.getElementById("url").innerText = profile.href;
+    document.getElementById("url").setAttribute("href", profile.href);
+}
+
+async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
     const challenge = await generateCodeChallenge(verifier);
 
@@ -18,7 +55,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
 }
 
-export async function getAccessToken(clientId, code) {
+async function getAccessToken(clientId, code) {
     const verifier = localStorage.getItem("verifier");
 
     const params = new URLSearchParams();
@@ -63,24 +100,3 @@ async function generateCodeChallenge(codeVerifier) {
         .replace(/\//g, '_')
         .replace(/=+$/, '');
 }
-
-// export const refreshSpotifyToken = async (refresh_token) => {
-//     const body = new URLSearchParams({
-//         grant_type: "refresh_token" || "",
-//         refresh_token: refresh_token,
-//         client_id: SPOTIFY_CLIENT_ID || "",
-//     });
-//     try {
-//         const response = await fetch("https://accounts.spotify.com/api/token", {
-//             method: "POST",
-//             headers: {
-//                 "Content-Type": "application/x-www-form-urlencoded",
-//             },
-//             body: body,
-//         });
-
-//         return response.json();
-//     } catch (err) {
-//         console.log(err);
-//     }
-// };

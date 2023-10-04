@@ -5,12 +5,11 @@ export default function RootLayout({ children }) {
         <html lang="en">
         <head>
             <title>My Spotify Profile</title>
-            <Script 
-                src="http://localhost:3000/src/script.js"
-                strategy="onLoad"
-            />
         </head>
         <body>
+            <Script 
+                src="script.js"
+            />
             <h1>Display your Spotify profile data</h1>
             <section id="profile">
                 <h2> Logged in as <span id="displayName"></span></h2>
