@@ -7,9 +7,12 @@ if (!code) {
     redirectToAuthCodeFlow(clientId);
 } else {
     console.log('hello from else script.js')
-    const accessToken = await getAccessToken(clientId, code);
-    const profile = await fetchProfile(accessToken);
-    populateUI(profile);
+    async function run() {
+        const accessToken = await getAccessToken(clientId, code);
+        const profile = await fetchProfile(accessToken);
+        populateUI(profile);
+    }
+    run()
 }
 
 async function fetchProfile(token) {
