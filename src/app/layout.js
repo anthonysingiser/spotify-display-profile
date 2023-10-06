@@ -10,7 +10,7 @@ export default function RootLayout({ children }) {
             <Script 
                 src="script.js"
             />
-            <h1>Display your Spotify profile data</h1>
+            <h1>My Spotify Profile</h1>
             <section id="profile">
                 <h2> Logged in as <span id="displayName"></span></h2>
                 <span id="avatar"></span>
