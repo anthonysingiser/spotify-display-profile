@@ -3,13 +3,12 @@ const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
 if (!code) {
-    console.log('hello from script.js')
     redirectToAuthCodeFlow(clientId);
 } else {
-    console.log('hello from else script.js')
     async function run() {
         const accessToken = await getAccessToken(clientId, code);
         const profile = await fetchProfile(accessToken);
+        console.log(profile)
         populateUI(profile);
     }
     run()
@@ -24,11 +23,11 @@ async function fetchProfile(token) {
 
 function populateUI(profile) {
     document.getElementById("displayName").innerText = profile.display_name;
-    if (profile.images[0]) {
+    if (profile.images[1]) {
         const profileImage = new Image(200, 200);
-        profileImage.src = profile.images[0].url;
+        profileImage.src = profile.images[1].url;
         document.getElementById("avatar").appendChild(profileImage);
-        document.getElementById("imgUrl").innerText = profile.images[0].url;
+        document.getElementById("imgUrl").innerText = profile.images[1].url;
     }
     document.getElementById("id").innerText = profile.id;
     document.getElementById("email").innerText = profile.email;
