@@ -35,6 +35,9 @@ function populateUI(profile) {
     document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
     document.getElementById("url").innerText = profile.href;
     document.getElementById("url").setAttribute("href", profile.href);
+    document.getElementById("country").innerText = profile.country;
+    document.getElementById("followers").innerText = profile.followers.total;
+    document.getElementById("product").innerText = profile.product;
 }
 
 async function redirectToAuthCodeFlow(clientId) {
