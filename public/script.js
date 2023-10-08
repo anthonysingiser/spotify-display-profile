@@ -16,29 +16,27 @@ if (!code) {
 
 async function fetchProfile(token) {
     const result = await fetch("https://api.spotify.com/v1/me", {
-        method: "GET", headers: { Authorization: `Bearer ${token}` }
+        method: "GET", 
+        headers: { Authorization: `Bearer ${token}` }
     });
     return await result.json();
 }
 
-function populateUI(profile) {
-    document.getElementById("displayName").innerText = profile.display_name;
-    if (profile.images[1]) {
+const populateUI = (profile) => {
+    const { display_name, images, id, email, uri } = profile;
+    document.getElementById("displayName").innerText = display_name;
+    if (images[1]) {
         const profileImage = new Image(200, 200);
-        profileImage.src = profile.images[1].url;
+        profileImage.src = images[1].url;
         document.getElementById("avatar").appendChild(profileImage);
-        document.getElementById("imgUrl").innerText = profile.images[1].url;
+        document.getElementById("imgUrl").innerText = images[1].url;
+        document.getElementById("imgUrl").href = images[1].url;
     }
-    document.getElementById("id").innerText = profile.id;
-    document.getElementById("email").innerText = profile.email;
-    document.getElementById("uri").innerText = profile.uri;
-    document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
-    document.getElementById("url").innerText = profile.href;
-    document.getElementById("url").setAttribute("href", profile.href);
-    document.getElementById("country").innerText = profile.country;
-    document.getElementById("followers").innerText = profile.followers.total;
-    document.getElementById("product").innerText = profile.product;
-}
+    document.getElementById("id").innerText = id;
+    document.getElementById("email").innerText = email;
+    document.getElementById("uri").innerText = uri;
+    document.getElementById("uri").href = uri;
+};
 
 async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
