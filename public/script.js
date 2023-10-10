@@ -23,7 +23,7 @@ async function fetchProfile(token) {
 }
 
 const populateUI = (profile) => {
-    const { display_name, images, id, email, uri } = profile;
+    const { display_name, images, id, email, external_urls, uri, href, country, followers, product } = profile;
     document.getElementById("displayName").innerText = display_name;
     if (images[1]) {
         const profileImage = new Image(200, 200);
@@ -35,7 +35,12 @@ const populateUI = (profile) => {
     document.getElementById("id").innerText = id;
     document.getElementById("email").innerText = email;
     document.getElementById("uri").innerText = uri;
-    document.getElementById("uri").href = uri;
+    document.getElementById("uri").href = external_urls.spotify;
+    document.getElementById("url").innerText = href;
+    document.getElementById("url").href = href;
+    document.getElementById("country").innerText = country;
+    document.getElementById("followers").innerText = followers.total;
+    document.getElementById("product").innerText = product;
 };
 
 async function redirectToAuthCodeFlow(clientId) {
@@ -47,6 +52,7 @@ async function redirectToAuthCodeFlow(clientId) {
     localStorage.setItem("verifier", verifier);
 
     const params = new URLSearchParams()
+    
     params.append("client_id", clientId);
     params.append("response_type", "code");
     params.append("redirect_uri", "http://localhost:3000/callback");
